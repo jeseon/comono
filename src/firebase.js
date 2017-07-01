@@ -10,45 +10,28 @@ const config = {
   messagingSenderId: '552638308978'
 };
 
-const uiConfig = {
-  signInFlow: 'popup',
-  signInOptions: [{
-    provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    scopes: ['https://www.googleapis.com/auth/plus.login']
-  }],
-  tosUrl: '/',
-  callbacks: {
-    signInSuccess: function(user, credential, redirectUrl) {
-      handleSignedInUser(user);
-      return false;
-    }
-  },
-};
-
-const handleSignedInUser = user => {
-  document.getElementById('name').textContent = user.displayName;
-  document.getElementById('email').textContent = user.email;
-  document.getElementById('phone').textContent = user.phoneNumber;
-
-  if (user.photoURL) {
-    document.getElementById('photo').src = user.photoURL;
-    document.getElementById('photo').style.display = 'block';
-  } else {
-    document.getElementById('photo').style.display = 'none';
-  }
-};
-
 export const storageKey = 'comonos';
 export const firebaseApp = firebase.initializeApp(config);
-export const auth = firebaseApp.auth();
 export const database = firebaseApp.database();
 
-const ui = new firebaseui.auth.AuthUI(auth);
-
-export const firebaseAuth = elemt => {
-  ui.start(elemt, uiConfig);
-}
+const ui = new firebaseui.auth.AuthUI(firebaseApp.auth());
+export const firebaseAuth = (elemt, onSignedIn) => {
+  ui.start(elemt, {
+    signInFlow: 'popup',
+    signInOptions: [{
+      provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      scopes: ['https://www.googleapis.com/auth/plus.login']
+    }],
+    tosUrl: '/',
+    callbacks: {
+      signInSuccess: function(user, credential, redirectUrl) {
+        onSignedIn(user);
+        return false;
+      }
+    }
+  });
+};
 
 export const isAuthenticated = () => {
-  return !!auth.currentUser || !!localStorage.getItem(storageKey);
-}
+  return !!firebaseApp.auth().currentUser || !!localStorage.getItem(storageKey);
+};
