@@ -11,12 +11,10 @@ class Comments extends Component {
 
   componentWillMount() {
     this.firedata = firebase.database().ref('/comments');
-    this.firedata.on('value', snapshot => {
-      this.setState({
-        loading: false,
-        comments: snapshot.val()
-      })
-    });
+    this.firedata.on('value', snapshot => this.setState({
+      loading: false,
+      comments: snapshot.val() ? snapshot.val() : []
+    }));
   }
 
   componentWillUnmount() {

@@ -16,16 +16,14 @@ const CommentItem = ({ id, date, author, avatar, content, children }) => (
     </Comment.Content>
     {children ?
       <Comment.Group>
-        {children.map(child =>
-          <CommentItem
-            key={child.id}
-            date={child.date}
-            author={child.author}
-            avatar={child.avatar}
-            content={child.content}
-            children={child.children}
-          />
-        )}
+        {children.map(child => <CommentItem
+          key={child.id}
+          date={child.date}
+          author={child.author}
+          avatar={child.avatar}
+          content={child.content}
+          children={child.children}
+        />)}
       </Comment.Group> : null
     }
   </Comment>
