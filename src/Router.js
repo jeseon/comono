@@ -1,18 +1,66 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Home, Comments, Login } from './routes';
+import { firebaseAuth } from './config/firebase';
 import App from './App';
 
-const Router = () => (
-  <BrowserRouter>
-    <Switch>
-      <App>
-        <Route exact path="/" component={Home}/>
-        <Route path="/comments" component={Comments}/>
-        <Route path="/login" component={Login}/>
-      </App>
-    </Switch>
-  </BrowserRouter>
+const PublicRoute = ({component: Component, authed, ...rest}) => (
+  <Route
+    {...rest}
+    render={props => authed === false
+      ? <Component {...props} />
+      : <Redirect to='/' />}
+  />
 );
 
-export default Router;
+const PrivateRoute = ({component: Component, authed, ...rest}) => (
+  <Route
+    {...rest}
+    render={props => authed === true
+      ? <Component {...props} />
+      : <Redirect to={{pathname: '/login', state: {from: props.location}}} />}
+  />
+);
+
+export default class Router extends React.Component {
+  state = {
+    authed: false,
+    loading: true,
+  };
+
+  componentDidMount () {
+    this.removeListener = firebaseAuth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({
+          authed: true,
+          loading: false,
+        })
+      } else {
+        this.setState({
+          authed: false,
+          loading: false
+        })
+      }
+    })
+  }
+
+  componentWillUnmount () {
+    this.removeListener()
+  }
+
+  render() {
+    const { authed } = this.state;
+
+    return (
+      <BrowserRouter>
+        <Switch>
+          <App>
+            <Route exact path="/" component={Home}/>
+            <PublicRoute path="/login" authed={authed} component={Login}/>
+            <PrivateRoute path="/comments" authed={authed} component={Comments}/>
+          </App>
+        </Switch>
+      </BrowserRouter>
+    );
+  }
+}

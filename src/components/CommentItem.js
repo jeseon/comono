@@ -14,7 +14,8 @@ const CommentItem = ({ id, date, author, avatar, content, children }) => (
         <Comment.Action>Reply</Comment.Action>
       </Comment.Actions>
     </Comment.Content>
-    {children ?
+    {
+      children &&
       <Comment.Group>
         {children.map(child => <CommentItem
           key={child.id}
@@ -24,7 +25,7 @@ const CommentItem = ({ id, date, author, avatar, content, children }) => (
           content={child.content}
           children={child.children}
         />)}
-      </Comment.Group> : null
+      </Comment.Group>
     }
   </Comment>
 );

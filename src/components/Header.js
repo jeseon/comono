@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Icon } from 'semantic-ui-react';
 
-class Header extends Component {
+export default class Header extends Component {
   state = {
     activeItem: ''
   };
@@ -34,5 +34,3 @@ class Header extends Component {
     );
   }
 }
-
-export default Header;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Form, Header } from 'semantic-ui-react'
-import * as firebase from 'firebase';
+import firebase from 'firebase';
 import CommentItems from '../components/CommentItems'
 
 class Comments extends Component {

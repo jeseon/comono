@@ -10,12 +10,15 @@ const config = {
   messagingSenderId: '552638308978'
 };
 
-export const storageKey = 'comonos';
-export const firebaseApp = firebase.initializeApp(config);
-export const database = firebaseApp.database();
+firebase.initializeApp(config);
 
-const ui = new firebaseui.auth.AuthUI(firebaseApp.auth());
-export const firebaseAuth = (elemt, onSignedIn) => {
+export const storageKey = 'comonos';
+export const ref = firebase.database().ref();
+export const database = firebase.database();
+export const firebaseAuth = firebase.auth;
+
+const ui = new firebaseui.auth.AuthUI(firebaseAuth());
+export const firebaseUiStart = elemt => {
   ui.start(elemt, {
     signInFlow: 'popup',
     signInOptions: [{
@@ -25,7 +28,6 @@ export const firebaseAuth = (elemt, onSignedIn) => {
     tosUrl: '/',
     callbacks: {
       signInSuccess: function(user, credential, redirectUrl) {
-        onSignedIn(user);
         return false;
       }
     }
@@ -33,5 +35,5 @@ export const firebaseAuth = (elemt, onSignedIn) => {
 };
 
 export const isAuthenticated = () => {
-  return !!firebaseApp.auth().currentUser || !!localStorage.getItem(storageKey);
+  return !!firebaseAuth().currentUser || !!localStorage.getItem(storageKey);
 };
