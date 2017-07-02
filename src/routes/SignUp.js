@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link } from "react-router-dom";
-import { Button, Form, Grid, Message, Segment } from 'semantic-ui-react';
-import { login } from "../services/auth";
+import { Button, Checkbox, Form, Grid, Message, Segment } from 'semantic-ui-react';
+import { signup } from "../services/auth";
 
-export default class Login extends React.Component {
+export default class SignUp extends React.Component {
   state = {
     email: null,
     password: null,
@@ -22,10 +21,9 @@ export default class Login extends React.Component {
     e.preventDefault();
     const { email, password } = this.state;
 
-    login(email, password)
+    signup(email, password)
       .catch(error => {
-        console.log(error);
-        this.setState({message: "Invalid username/password."});
+        this.setState({ message: "Invalid username/password." });
       });
   };
 
@@ -39,12 +37,12 @@ export default class Login extends React.Component {
             <Form size="large">
               <Form.Input placeholder='Email' type="email" icon='user' iconPosition='left' onChange={this.handleEmail}/>
               <Form.Input placeholder='Password' type="password" icon='lock' iconPosition='left'  onChange={this.handlePassword}/>
-              <Button fluid size="large" color="teal" type='submit' onClick={this.handleSubmit}>Login</Button>
+              <Form.Field>
+                <Checkbox label="I agree to the Terms and Conditions"/>
+              </Form.Field>
+              <Button fluid size="large" color="teal" type='submit' onClick={this.handleSubmit}>Sign Up</Button>
             </Form>
           </Segment>
-          <Message>
-            New to us? <Link to="/signup">Sign Up</Link>
-          </Message>
           {
             message &&
             <Message negative style={{textAlign: 'left'}}>

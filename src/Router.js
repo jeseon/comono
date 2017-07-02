@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { Home, Comments, Login } from './routes';
+import { Home, Comments, Login, SignUp } from './routes';
 import { firebaseAuth } from './config/firebase';
 import App from './App';
 
@@ -57,6 +57,7 @@ export default class Router extends React.Component {
           <App>
             <Route exact path="/" component={Home}/>
             <PublicRoute path="/login" authed={authed} component={Login}/>
+            <PublicRoute path="/signup" authed={authed} component={SignUp}/>
             <PrivateRoute path="/comments" authed={authed} component={Comments}/>
           </App>
         </Switch>
